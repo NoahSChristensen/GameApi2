@@ -1,11 +1,14 @@
+using GameApi2.Data;
 using GameApi2.Models;
 using GameApi2.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameApi2.Repositories;
 
 
 public class UserRepository : IUserRepository
 {
+
     private readonly List<User> _user = new List<User>
     {
 
@@ -28,46 +31,85 @@ public class UserRepository : IUserRepository
 
     };
 
-    private readonly DataService _dataService;
+    // private readonly DataService _dataService;
 
-    public UserRepository(DataService dataService)
+    // public UserRepository(DataService dataService)
+    // {
+    //     _dataService = dataService;
+    // }
+
+    private readonly DbContextGameApi _dbContext;
+
+    public UserRepository(DbContextGameApi dbContext)
     {
-        _dataService = dataService;
+        _dbContext = dbContext;
     }
 
     public async Task<User> AddAsync(User user)
     {
-        var users = await _dataService.LoadUsersAsync();
+        // MED JSON DATABASE
+        // var users = await _dataService.LoadUsersAsync();
 
-        users.Add(user);
+        // users.Add(user);
 
-        await _dataService.SaveUsersAsync(users);
+        // await _dataService.SaveUsersAsync(users);
+
+        // return user;
+
+        if (string.IsNullOrWhiteSpace(user.Id)) user.Id = Guid.NewGuid().ToString();
+
+        user.Oprettet = DateTime.UtcNow;
+        user.Opdateret = DateTime.UtcNow;
+
+        _dbContext.Users.Add(user);
+
+        await _dbContext.SaveChangesAsync();
 
         return user;
     }
 
-    public Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(string id)
     {
-        var user = _user.FirstOrDefault(u => u.Id == id);
+        // MED JSON DATABASE
+        // var user = _user.FirstOrDefault(u => u.Id == id);
 
-        if (user == null) return Task.FromResult(false);
+        // if (user == null) return Task.FromResult(false);
 
-        _user.Remove(user);
-        return Task.FromResult(true);
+        // _user.Remove(user);
+        // return Task.FromResult(true);
+
+        User? existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+
+        if (existingUser == null) return false;
+
+        _dbContext.Users.Remove(existingUser);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
 
     }
 
     public async Task<List<User>> getAllAsync()
     {
-        var users = await _dataService.LoadUsersAsync();
+        // MED JSON DATABASE
+        // var users = await _dataService.LoadUsersAsync();
+
+        // return users;
+
+        var users = await _dbContext.Users.ToListAsync();
 
         return users;
     }
 
     public Task<User?> GetByEmail(string email)
     {
-        var user = _dataService.LoadUsersAsync().Result.FirstOrDefault(u => u.Email == email);
-        return Task.FromResult(user);
+        // MED JSON DATABASE
+        // var user = _dataService.LoadUsersAsync().Result.FirstOrDefault(u => u.Email == email);
+        // return Task.FromResult(user);
+
+        var user = _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        return user;
     }
 
     public Task GetByEmailAsync(string email)
@@ -75,27 +117,42 @@ public class UserRepository : IUserRepository
         throw new NotImplementedException();
     }
 
-    public Task<User?> GetByIdAsync(string id)
+    public async Task<User?> GetByIdAsync(string id)
     {
-        var user = _dataService.LoadUsersAsync().Result.FirstOrDefault(u => u.Id == id);
-        return Task.FromResult(user);
+        // MED JSON DATABASE
+        // var user = _dataService.LoadUsersAsync().Result.FirstOrDefault(u => u.Id == id);
+        // return Task.FromResult(user);
+
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task<bool> UpdateAsync(User updatedUser)
     {
 
-        var user = await _dataService.LoadUsersAsync();
+        // MED JSON DATABASE
+
+        // var user = await _dataService.LoadUsersAsync();
 
 
-        var existingUser = user.FirstOrDefault(u => u.Id == updatedUser.Id);
+        // var existingUser = user.FirstOrDefault(u => u.Id == updatedUser.Id);
+
+        // if (existingUser == null) return false;
+
+        // existingUser.Name = updatedUser.Name;
+        // existingUser.Email = updatedUser.Email;
+        // existingUser.Opdateret = DateTime.UtcNow;
+        // await _dataService.SaveUsersAsync(user);
+        // return true;
+
+        User? existingUser = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == updatedUser.Id);
 
         if (existingUser == null) return false;
 
         existingUser.Name = updatedUser.Name;
         existingUser.Email = updatedUser.Email;
         existingUser.Opdateret = DateTime.UtcNow;
-        await _dataService.SaveUsersAsync(user);
-        return true;
+        await _dbContext.SaveChangesAsync();
 
+        return true;
     }
 }

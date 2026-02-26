@@ -40,6 +40,7 @@ public class UserService
             Id = Guid.NewGuid().ToString(),
             Email = postDto.Email,
             Name = postDto.Name,
+            PasswordHash = postDto.Password,
             Oprettet = DateTime.UtcNow,
             Opdateret = DateTime.UtcNow
 

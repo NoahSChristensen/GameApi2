@@ -52,5 +52,14 @@
     "role": "Admin",
     "oprettet": "2026-02-26T09:34:48.0714293Z",
     "opdateret": "2026-02-26T09:34:48.0714297Z"
+  },
+  {
+    "id": "30289195-f028-4eb4-af1e-df27516022c2",
+    "email": "realAdmin@gmail.com",
+    "name": "Admin",
+    "passwordHash": "$2a$11$V6R3rr0CIU6eaLDU2naOaOKvplSgYLsa2NWVUul8TCqeAV0uaDlti",
+    "role": "Admin",
+    "oprettet": "2026-02-26T09:41:34.8973954Z",
+    "opdateret": "2026-02-26T09:41:34.897396Z"
   }
 ]

@@ -41,8 +41,10 @@
 
 using DotNetEnv;
 using GameApi2.Controllers;
+using GameApi2.Data;
 using GameApi2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -77,7 +79,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
     });
-    
+
 });
 
 builder.Services.AddSingleton<GameApi2.Services.DataService>();
@@ -137,7 +139,17 @@ builder.Services.AddScoped<AuthService>();
 // GameApi2.Repositories.UserRepository>();
 // builder.Services.AddScoped<GameApi2.Services.UserService>();
 // builder.Services.AddSingleton<DataService>();
+
+builder.Services.AddDbContext<DbContextGameApi>(options =>
+options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data -Source-gameapi.db")
+);
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<DbContextGameApi>().Database.EnsureCreated();
+}
 
 
 
