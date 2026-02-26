@@ -1,0 +1,56 @@
+[
+  {
+    "id": "7fdeefc3-579c-48bd-81c3-0ec8d13dd158",
+    "email": "user@example.com",
+    "name": "Tester Igen",
+    "passwordHash": "",
+    "role": "User",
+    "oprettet": "2026-02-20T09:18:48.9794146Z",
+    "opdateret": "2026-02-20T09:33:12.5018864Z"
+  },
+  {
+    "id": "ff5ab007-6bde-4a8e-ac08-34ef4348f16b",
+    "email": "Noah@example.com",
+    "name": "Noah",
+    "passwordHash": "",
+    "role": "User",
+    "oprettet": "2026-02-20T09:35:39.3248866Z",
+    "opdateret": "2026-02-20T09:35:39.3248868Z"
+  },
+  {
+    "id": "969bc640-e08b-4c09-aa30-fb8d1037e904",
+    "email": "testerOmDetStadigv\u00E6kVirker@gmail.com",
+    "name": "ViTesterIgen",
+    "passwordHash": "",
+    "role": "User",
+    "oprettet": "2026-02-26T09:14:51.4671003Z",
+    "opdateret": "2026-02-26T09:14:51.4671008Z"
+  },
+  {
+    "id": "3cb41826-0ecd-4103-8e61-78d0c3007b29",
+    "email": "noah2403@hotmail.com",
+    "name": "Noah",
+    "passwordHash": "$2a$11$9Hx46I/WvJysXtY0cfpSGODy4C/8p/TJL70PixWvQxWfM7XZxc9d2",
+    "role": "User",
+    "oprettet": "2026-02-26T09:15:36.1554488Z",
+    "opdateret": "2026-02-26T09:15:36.1554493Z"
+  },
+  {
+    "id": "fae36bd1-19ea-43d1-939a-e4208612793b",
+    "email": "yep@gmail.dk",
+    "name": "string",
+    "passwordHash": "$2a$11$T9H/zPcvUQivz2m/czYyn.v.2.JD2hY1cCeUz/s/JXL6wBvW3JedW",
+    "role": "User",
+    "oprettet": "2026-02-26T09:24:45.013894Z",
+    "opdateret": "2026-02-26T09:24:45.0138946Z"
+  },
+  {
+    "id": "69ec9829-5ff0-4246-b05d-3af27b0661e0",
+    "email": "Yepsen@gmail.com",
+    "name": "string",
+    "passwordHash": "$2a$11$.AOBQf/5i/rtsnY8ZWj2w.WIwheogeeqq/kers3taVRtaoB9gUiM2",
+    "role": "Admin",
+    "oprettet": "2026-02-26T09:34:48.0714293Z",
+    "opdateret": "2026-02-26T09:34:48.0714297Z"
+  }
+]
