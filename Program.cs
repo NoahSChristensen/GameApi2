@@ -98,8 +98,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-// JWT
-var jwtKey = builder.Configuration["Jwt:Key"]
+// JWT                              jwt: Key
+var jwtKey = builder.Configuration["jwt:Key"]
     ?? throw new InvalidOperationException("Jwt:Key mangler i appsettings.");
 
 builder.Services
