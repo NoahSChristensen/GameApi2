@@ -11,9 +11,10 @@ public class Order
 
     public User? User { get; set; }
 
-    public string OrderValue { get; set; } = string.Empty;
+    public int OrderValue { get; set; }
 
     public DateTime Oprettet { get; set; } = DateTime.UtcNow;
 
     public DateTime Opdateret { get; set; } = DateTime.UtcNow;
+
 }

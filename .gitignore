@@ -1,3 +1,4 @@
+.vscode/
 .env
 appsettings.Development.json
 gameapi.db

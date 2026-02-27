@@ -45,6 +45,7 @@ using GameApi2.Data;
 using GameApi2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -52,7 +53,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Load .env automatisk
 Env.Load();
 // Instantier url variablen
-var url = "http://localhost:5212";
+var url = Environment.GetEnvironmentVariable("WEBAPI_URL");
+
 if (!string.IsNullOrEmpty(url))
 {
     // Dette fortæller Kestrel, hvilken port den skal lytte på
@@ -84,6 +86,8 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddSingleton<GameApi2.Services.DataService>();
 builder.Services.AddScoped<GameApi2.Repositories.IUserRepository, GameApi2.Repositories.UserRepository>();
+builder.Services.AddScoped<GameApi2.Repositories.IOrderRepository, GameApi2.Repositories.OrderRepository>();
+builder.Services.AddScoped<GameApi2.Services.OrderService>();
 builder.Services.AddScoped<GameApi2.Services.UserService>();
 builder.Services.AddScoped<GameApi2.Services.AuthService>();
 
@@ -97,6 +101,7 @@ builder.Services.AddCors(options =>
      .AllowAnyHeader();
     });
 });
+
 
 // JWT                              jwt: Key
 var jwtKey = builder.Configuration["jwt:Key"]
@@ -167,4 +172,5 @@ app.UseAuthorization();
 // Map user endpoints
 await app.MapUserEndpoints();
 await app.MapAuthEndpoints();
+await app.MapOrderEndPoints();
 app.Run();

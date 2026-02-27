@@ -6,9 +6,10 @@ namespace GameApi2.Data;
 
 public class DbContextGameApi : DbContext
 {
-    
+
     public DbContextGameApi(DbContextOptions<DbContextGameApi> options)
-    : base(options) {  }
+    : base(options) { }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Order> Orders => Set<Order>();
 }
