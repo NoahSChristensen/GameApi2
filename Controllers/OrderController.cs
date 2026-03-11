@@ -18,7 +18,7 @@ public static class OrderController
         {
             var orders = await orderService.GetAllOrderAsync();
             return Results.Ok(orders);
-        }).WithName("GetAllOrders");
+        }).WithName("GetAllOrders").WithTags("Orders");
 
 
         app.MapPost("/orders", async ([FromBody] OrderPostDTO orderPostDTO, OrderService orderService, DbContextGameApi dbContext) =>
@@ -31,7 +31,7 @@ public static class OrderController
 
             var order = await orderService.CreateOrderAsync(orderPostDTO, user);
             return Results.Created($"/orders/{orderPostDTO.UserId}", order);
-        }).WithName("CreateOrder");
+        }).WithName("CreateOrder").WithTags("Orders");
     }
 
 }

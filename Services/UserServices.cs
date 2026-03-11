@@ -94,6 +94,7 @@ public class UserService
             Id = user.Id,
             Email = user.Email,
             Name = user.Name,
+            Role = user.Role,
             Oprettet = user.Oprettet,
             Opdateret = user.Opdateret
         };

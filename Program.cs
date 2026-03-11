@@ -45,11 +45,17 @@ using GameApi2.Data;
 using GameApi2.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
 // Load .env automatisk
 Env.Load();
 // Instantier url variablen
@@ -85,11 +91,20 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 builder.Services.AddSingleton<GameApi2.Services.DataService>();
+
 builder.Services.AddScoped<GameApi2.Repositories.IUserRepository, GameApi2.Repositories.UserRepository>();
 builder.Services.AddScoped<GameApi2.Repositories.IOrderRepository, GameApi2.Repositories.OrderRepository>();
+
 builder.Services.AddScoped<GameApi2.Services.OrderService>();
 builder.Services.AddScoped<GameApi2.Services.UserService>();
+
 builder.Services.AddScoped<GameApi2.Services.AuthService>();
+
+builder.Services.AddScoped<GameApi2.Repositories.IPointRepository, GameApi2.Repositories.PointRepository>();
+builder.Services.AddScoped<GameApi2.Services.PointService>();
+
+builder.Services.AddScoped<GameApi2.Repositories.IMazeRepository, GameApi2.Repositories.MazeRepository>();
+builder.Services.AddScoped<GameApi2.Services.MazeService>();
 
 // CORS – nødvendigt så mobil-appen (Expo Go) kan kalde API'et fra telefonen
 builder.Services.AddCors(options =>
@@ -145,15 +160,29 @@ builder.Services.AddScoped<AuthService>();
 // builder.Services.AddScoped<GameApi2.Services.UserService>();
 // builder.Services.AddSingleton<DataService>();
 
+// builder.Services.AddDbContext<DbContextGameApi>(options =>
+// options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data -Source-gameapi.db")
+// );
+
+var dbPath = Path.Combine(Directory.GetCurrentDirectory(), "gameapi.db");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+?? $"Data Source={dbPath}";
 builder.Services.AddDbContext<DbContextGameApi>(options =>
-options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data -Source-gameapi.db")
-);
+ options.UseSqlite(connectionString));
 
 var app = builder.Build();
 
+// using (var scope = app.Services.CreateScope())
+// {
+//     scope.ServiceProvider.GetRequiredService<DbContextGameApi>().Database.EnsureCreated();
+// }
+
 using (var scope = app.Services.CreateScope())
 {
-    scope.ServiceProvider.GetRequiredService<DbContextGameApi>().Database.EnsureCreated();
+    var db = scope.ServiceProvider.GetRequiredService<DbContextGameApi>();
+    db.Database.EnsureCreated();
+    // Opret Point tabellen hvis den ikke findes (ved opgradering fra in-memory)
+    db.Database.ExecuteSqlRaw("CREATE TABLE IF NOT EXISTS Point (UserId TEXT NOT NULL PRIMARY KEY, Total INTEGER NOT NULL DEFAULT 0)");
 }
 
 
@@ -173,4 +202,6 @@ app.UseAuthorization();
 await app.MapUserEndpoints();
 await app.MapAuthEndpoints();
 await app.MapOrderEndPoints();
+await app.MapMazeEndPoints();
+app.MapEndPoints();
 app.Run();

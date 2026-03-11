@@ -24,12 +24,12 @@ public class AuthService
         if (await _userRepository.GetByEmail(dto.Email) != null)
             return null;
 
-        // Første bruger der registreres bliver Admin; resten bliver User
+
         List<User> existingUsers = await _userRepository.getAllAsync();
         Console.WriteLine($"Existing users: {existingUsers.Count}");
-        // string? role = existingUsers.Count == 0 ? "Admin" : "User";
+        string? role = existingUsers.Count == 0 ? "Admin" : "User";
 
-        string? role = "Admin";
+        // string? role = "Admin";
 
 
 
@@ -61,11 +61,18 @@ public class AuthService
 
         string? token = GenerateJwt(user);
 
+        // Console.WriteLine("Login attempt:");
+        // Console.WriteLine("Email from DTO: " + dto.Email);
+        // Console.WriteLine("Password from DTO: " + dto.Password);
+        // Console.WriteLine("User found: " + user?.Email);
+        // Console.WriteLine("Stored password: " + user?.PasswordHash);
+
         return new LoginPostDto
         {
             Token = token,
             User = ToUserInfo(user)
         };
+
     }
 
 

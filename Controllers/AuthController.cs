@@ -25,6 +25,7 @@ public static class AuthController
             return Results.Created("/auth/login", result);
         })
         .WithName("Register")
+        .WithTags("Auth")
         .WithOpenApi();
 
 
@@ -35,11 +36,12 @@ public static class AuthController
 
             var result = await auth.LoginAsync(dto);
 
-            if (result == null)
-                return Results.Unauthorized();
+            if (result == null) return Results.Unauthorized();
+                
             return Results.Ok(result);
         })
         .WithName("Login")
+        .WithTags("Auth")
         .WithOpenApi();
 
 
@@ -49,7 +51,7 @@ public static class AuthController
             var users = await userService.GetAllUsersAsync();
             return Results.Ok(users);
 
-        }).RequireAuthorization("AdminOnly"); // kræver policy "AdminOnly" (RequireRole("Admin"))
+        }).RequireAuthorization("AdminOnly").WithName("GetAuthUsers").WithTags("Auth"); // kræver policy "AdminOnly" (RequireRole("Admin"))
 
 
         app.MapGet("/auth/users/{id}", async (string id, ClaimsPrincipal principal, UserService userService) =>
@@ -64,6 +66,7 @@ public static class AuthController
             return user != null ? Results.Ok(user) : Results.NotFound();
         })
         .RequireAuthorization()
+        .WithTags("Auth")
         .WithOpenApi();
 
     }
